@@ -1,0 +1,38 @@
+#!/usr/bin/ruby
+#
+# This file is part of CPEE-LLM-DOCUMENTS.
+#
+# CPEE-LLM-DOCUMENTS is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+#
+# CPEE-LLM-DOCUMENTS is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+# Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with CPEE-LLM-DOCUMENTS (file LICENSE in the main directory). If not, see
+# <http://www.gnu.org/licenses/>.
+
+if File.exist?(File.join(__dir__,'..','lib','cpee-llm-documents','implementation.rb'))
+  require_relative File.join(__dir__,'..','lib','cpee-llm-documents','implementation')
+elsif File.exist?(File.join(Dir.home,'Projects','cpee-llm-documents','lib','cpee-llm-documents','implementation.rb'))
+  require_relative File.join(Dir.home, 'Projects','cpee-llm-documents','lib','cpee-llm-documents','implementation')
+else
+  require 'cpee-llm-documents/implementation'
+end
+
+options = {
+  :host => 'localhost',
+  :port => 9360,
+  :secure => false
+}
+
+Riddl::Server.new(CPEE::LLM::Documents::SERVER, options) do
+  accessible_description true
+  cross_site_xhr true
+
+  use CPEE::LLM::Documents::implementation(@riddl_opts)
+end.loop!
