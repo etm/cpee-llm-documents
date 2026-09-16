@@ -30,7 +30,7 @@ PUT /
 
 ## Configuration
 
-`llm-documents.conf` (YAML) sits next to the `llm-documents` daemon
+The `llm-documents.conf` (YAML) sits next to the `llm-documents` daemon
 script and is loaded automatically on startup:
 
 ```yaml
