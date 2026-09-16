@@ -9,10 +9,15 @@ It exposes a single resource:
 PUT /
 ```
 
-* `out` — `pipe` or `chat`, selects the response format.
-* `user_input` — `text/plain` free-form instruction text.
-* `document` — one or more URLs (strings) pointing to the documents to
-  process.
+* `user_input` — `text/plain` free-form instruction text. Any
+  `http://` or `https://` URL found in it is treated as a document to
+  process: it is fetched, and Office formats (`.docx`, `.xlsx`, `.pptx`,
+  `.doc`, `.xls`, `.ppt`) are converted to PDF before being attached to
+  the request. The instruction is answered using information extracted
+  from the attached document(s), framed in terms of process model
+  concepts (tasks, gateways, control flow, and any associated
+  conditions, roles, or data).
+* `llm` — `text/plain`, the LLM to use.
 
 ## Installation
 
