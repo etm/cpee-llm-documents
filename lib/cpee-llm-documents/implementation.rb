@@ -26,8 +26,15 @@ module CPEE
   module LLM
     module Documents
       SERVER = File.expand_path(File.join(__dir__,'implementation.xml'))
+      USED_TOKENS_HEADER = 'CPEE-LLM-Used-Tokens'
 
       class DoDocument < Riddl::Implementation #{{{
+        def used_tokens(tokens)
+          t = Array(tokens).first.to_s
+          @headers << Riddl::Header.new(USED_TOKENS_HEADER, "input=#{t[/input=(\d+)/,1].to_i}, output=#{t[/output=(\d+)/,1].to_i}")
+          @headers << Riddl::Header.new('Access-Control-Expose-Headers', USED_TOKENS_HEADER)
+        end
+
         OFFICE_EXTENSIONS = {
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document'   => '.docx',
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'         => '.xlsx',
@@ -98,12 +105,13 @@ module CPEE
             concepts wherever applicable.
           PROMPT
 
-          status, res = Riddl::Client.new(@a[0][:generic_endpoint]).post([
+          status, res, rheaders = Riddl::Client.new(@a[0][:generic_endpoint]).post([
             Riddl::Parameter::Complex.new('llm', 'text/plain', llm),
             Riddl::Parameter::Complex.new('user_input', 'text/plain', user_input),
             Riddl::Parameter::Complex.new('system_prompt', 'text/plain', system_prompt),
             Riddl::Parameter::Complex.new('format', 'text/plain', 'false')
           ] + documents)
+          used_tokens((rheaders || {})['CPEE_LLM_USED_TOKENS'])
 
           raw = res.first.value
           raw = raw.read if raw.respond_to?(:read)

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name             = "cpee-llm-documents"
-  s.version          = "1.0.0"
+  s.version          = "1.0.1"
   s.platform         = Gem::Platform::RUBY
   s.license          = "GPL-3.0-or-later"
   s.summary          = "LLM document processing service for the cloud process execution engine (cpee.org)"
